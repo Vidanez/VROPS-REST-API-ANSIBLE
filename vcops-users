@@ -1,0 +1,42 @@
+---
+  - name: "Using with VCOPS REST API"
+    hosts: localhost
+    connection: local
+    vars_prompt:
+     - name: vrops
+       prompt: Select VROPS -- Type file name without .yml 
+       private: no
+     - name: passadmin_vrops
+       prompt: What is admin VROPS password?
+    pre_tasks:
+    - name: Include Variable Files
+      include_vars: "{{ item }}"
+      with_items:
+        - vars/{{vrops}}.yml
+        - vars/userlist.yml
+    tasks:
+    - name: Login VROPS as admin
+      uri:
+        url: "{{ auth_api_url }}"
+        validate_certs: no
+        method: POST
+        body_format: json
+        headers:
+          Content-Type: application/json
+          Accept: application/json 
+        body: {"username":"{{ admin_vrops }}","authSource":"{{authSource_vrops }}","password":"{{ passadmin_vrops }}","others":[],"otherAttributes":{}} 
+        return_content: yes
+      register: full_login
+    - name: Adding Users
+      uri:
+        url: "{{ add_api_url }}"
+        validate_certs: no
+        method: POST
+        body_format: json
+        status_code: 201
+        headers:
+          Content-Type: application/json
+          Accept: application/json
+          Authorization: vRealizeOpsToken {{ full_login['json']['token'] }}
+        body: {"username":"{{ item.username }}","firstName":"{{ item.firstName }}","lastName":"{{ item.lastName }}","emailAddress":"{{ item.emailAddress}}","password":"{{ item.password }}","enabled":"{{ item.enabled }}","role-permissions":[{"roleName":"{{ item.roleName }}","allowAllObjects":"{{ item.allowAllObjects }}"}],"otherAttributes":{"pswdChangeState":"true"}}
+      with_items: "{{ users }}"

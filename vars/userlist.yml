@@ -1,0 +1,4 @@
+---
+users:
+  - { username: '', firstName: '', lastName: '', password: 'ChangeNOW@1', emailAddress: '', enabled: 'true', roleName: '', allowAllObjects: 'true' }
+  - { username: 'example', firstName: 'User', lastName: 'Example', password: 'ChangeNOW@1', emailAddress: 'user.example@mylocaldomain.com', enabled: 'true', roleName: 'PowerUser-1', allowAllObjects: 'true' }

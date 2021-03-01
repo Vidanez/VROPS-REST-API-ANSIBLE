@@ -1,0 +1,5 @@
+---
+auth_api_url: "https://vrom.mylocaldomain.com/suite-api/api/auth/token/acquire"
+add_api_url: "https://vrom.mylocaldomain.com/suite-api/api/auth/users"
+admin_vrops: "admin"
+authSource_vrops: "local"
